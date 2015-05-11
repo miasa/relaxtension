@@ -63,7 +63,7 @@
           console.log('matches', matches);
 
           //Clear previous highlights
-          body.unhighlight();
+          body.unhighlight({className: 'relaxtension-highlight'});
 
           if(matches && matches.length) {
             
