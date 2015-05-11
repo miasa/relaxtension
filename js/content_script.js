@@ -1,8 +1,11 @@
 (function($) {
 
+  /**
+   * Sanitizes the text to search
+   * @param  {String} textToSearch - The raw text to sanitize
+   * @return {String}              - Sanitized text
+   */
   function prepareText(textToSearch) {
-    //Sanitize text
-
     //Combine multiple line feeds into one
     textToSearch = textToSearch.replace(/[\n\t]{2,}/g, "\n");
     //Replace line feed with space
@@ -32,10 +35,14 @@
               patternWordBoundary = "[\\s.:,!?()\\\"']", //Crude replacement for utf8 word boundary \b
               pattern = "";
 
+          //Create regex pattern
           $.each(wordLengths, function(i, length) {
+            //First word begins with wordBoundary, 
+            //rest with whitespace since we're looking for multiple words right after another
             pattern += (i === 0 ? patternWordBoundary : "\\s") + patternWordPart + "{" + length + "}";
           });
 
+          //Append wordboundary to end of pattern
           pattern += patternWordBoundary;
 
           //console.log('text', textToSearch);
@@ -45,6 +52,7 @@
               matches = [], 
               match;
 
+          //Check for matches
           while(match = regex.exec(textToSearch)) {
               matches.push(match);
               regex.lastIndex = match.index + 1; //For overlapping matches
@@ -61,12 +69,14 @@
             
             //Sanitize even more
             $.each(matches, function(i, match) {
-              matches[i] = $.trim(matches[i]);
-              matches[i] = matches[i].replace(new RegExp("[.:,!?()\\\"']", "gi"), "");
+              matches[i] = $.trim(matches[i]); //Remove whitespace from beginning and end
+              matches[i] = matches[i].replace(new RegExp("[.:,!?()\\\"']", "gi"), ""); //Remove punctuations, parentheses etc.
             });
 
             //Highlight found words
             body.highlight(matches, {className: 'relaxtension-highlight'});
+
+            //TODO: should this scroll to first found match
           }else {
             alert("No matches found");
           }
