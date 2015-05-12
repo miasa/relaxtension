@@ -58,8 +58,6 @@
               regex.lastIndex = match.index + 1; //For overlapping matches
           }
 
-          //var matches = textToSearch.match(new RegExp(pattern, "gi"));
-
           console.log('matches', matches);
 
           //Clear previous highlights
@@ -75,8 +73,12 @@
 
             //Highlight found words
             body.highlight(matches, {className: 'relaxtension-highlight'});
+            //TODO: jquery.highlight plugin has the same limitations with utf8 word boundary, 
+            //should it be dropped and use the same crude replacements?
+            //It would be better to highlight only complete words instead of strings in the middle of words and this is only possible in English with the plugin currently
 
             //TODO: should this scroll to first found match
+            //or maybe scroll only if the first match is not in viewport currently
           }else {
             alert("No matches found");
           }
