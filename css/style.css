@@ -1,97 +1,61 @@
 /* Higlight tag */
 .relaxtension-highlight {
-    background-color: yellow;
-    color: #000;
-    font-weight: inherit;
+  background-color: yellow;
+  color: #000;
+  font-weight: inherit;
 }
 
 /* Popup skeleton */
+
+.relaxtension-html {
+  margin: 0;
+  padding: 0;
+}
+.relaxtension-body {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
 #relaxtension-popup,
 #relaxtension-popup * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 #relaxtension-popup {
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 10px;
-    padding-left: 10px;
-    width: 200px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 10px;
+  width: 200px;
 }
+  #relaxtension-popup label {
+    display: block;
+    margin-bottom: 0.5em;
+  }
 
-/* Grid / row */
-#relaxtension-popup .row {
-    margin-right: -10px;
-    margin-left: -10px;
-}
+  #relaxtension-popup .relaxtension-help {
+      color: #a7a7a7;
+      font-size: 90%;
+      margin-top: 0.5em;
+  }
 
-#relaxtension-popup .row:after, 
-#relaxtension-popup .row:before {
-    display: table;
-    content: " ";
-}
+  #relaxtension-popup .relaxtension-row {
+    display: flex;
+  }
 
-#relaxtension-popup .row:after {
-    clear: both;
-}
+  #relaxtension-popup .relaxtension-input-wrap {
+    flex: 1;
+  }
 
-/* Grid / col */
-#relaxtension-popup [class*="col-"] {
-    float: left;
-    min-height: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
-    position: relative;
-}
-
-#relaxtension-popup .col-1 {
-    width: 8.333%;
-}
-#relaxtension-popup .col-2 {
-    width: 16.666%;
-}
-#relaxtension-popup .col-3 {
-    width: 25%;
-}
-#relaxtension-popup .col-4 {
-    width: 33.333%;
-}
-#relaxtension-popup .col-5 {
-    width: 41.666%;
-}
-#relaxtension-popup .col-6 {
-    width: 50%;
-}
-#relaxtension-popup .col-7 {
-    width: 58.333%;
-}
-#relaxtension-popup .col-8 {
-    width: 66.666%;
-}
-#relaxtension-popup .col-9 {
-    width: 75%;
-}
-#relaxtension-popup .col-10 {
-    width: 83.333%;
-}
-#relaxtension-popup .col-11 {
-    width: 91.666%;
-}
-#relaxtension-popup .col-12 {
-    width: 100%;
-}
-
-/* Form */
-#relaxtension-popup input, 
-#relaxtension-popup button {
+  #relaxtension-popup input {
     height: 25px;
-    vertical-align: middle;
-    max-width: 100%;
-}
+    width: 100%;
+  }
 
-#relaxtension-popup button img {
-    height: 100%;
-}
-#relaxtension-popup .wc {
-    padding-right: 0;
-}
+  #relaxtension-popup button {
+    height: 25px;
+  }
+
+    #relaxtension-popup button img {
+      max-height: 100%;
+    }

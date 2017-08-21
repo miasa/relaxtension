@@ -1,9 +1,13 @@
-(function($) {
+
+var Relaxtension = (function() {
+  var api = {};
 
   /**
    * Sanitizes the text to search
-   * @param  {String} textToSearch - The raw text to sanitize
-   * @return {String}              - Sanitized text
+   * 
+   * @param  {string} textToSearch - The raw text to sanitize
+   * 
+   * @return {string}              - Sanitized text
    */
   function prepareText(textToSearch) {
     //Combine multiple line feeds into one
@@ -14,82 +18,141 @@
     return textToSearch;
   }
 
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (typeof request.highlight !== undefined) {
+  /**
+   * Sanitizes the input, only numbers are relevant
+   * 
+   * @param {string} input - Input field value
+   * 
+   * @return {array<number>} sanitized - Array of word lengths
+   */
+  function checkInput(input) {
+    var wordLengths = input.trim().split(" "),
+        sanitized   = wordLengths.map(Number).filter(item => !isNaN(item)); //Only numbers are relevant
 
-          var body = $('body'),
-              textToSearch = prepareText(body.text()),
-              wordLengths = request.highlight.split(" "),
-              matches = [];
+    return sanitized;
+  }
 
-          //Check for number type
-          $.each(wordLengths, function(i, length) {
-            var lengthNumber = parseInt(length, 10);
-            if(!isNaN(lengthNumber)) {
-              wordLengths[i] = lengthNumber;
-            }
-          });
-
-          var patternWordPart = "[a-zäöåéèáàëêâ\-]", //Crude replacement for utf8 \w
-              patternWordBoundary = "[\\s.:,!?()\\\"']", //Crude replacement for utf8 word boundary \b
-              pattern = "";
-
-          //Create regex pattern
-          $.each(wordLengths, function(i, length) {
-            //First word begins with wordBoundary, 
-            //rest with whitespace since we're looking for multiple words right after another
-            pattern += (i === 0 ? patternWordBoundary : "\\s") + patternWordPart + "{" + length + "}";
-          });
-
-          //Append wordboundary to end of pattern
-          pattern += patternWordBoundary;
-
-          //console.log('text', textToSearch);
-          console.log('pattern', pattern);
-
-          var regex = new RegExp(pattern,"gi"), 
-              matches = [], 
-              match;
-
-          //Check for matches
-          while(match = regex.exec(textToSearch)) {
-              matches.push(match);
-              regex.lastIndex = match.index + 1; //For overlapping matches
-          }
-
-          console.log('matches', matches);
-
-          //Clear previous highlights
-          body.unhighlight({className: 'relaxtension-highlight'});
-
-          if(matches && matches.length) {
-            
-            //Sanitize even more
-            $.each(matches, function(i, match) {
-              matches[i] = $.trim(matches[i]); //Remove whitespace from beginning and end
-              matches[i] = matches[i].replace(new RegExp("[.:,!?()\\\"']", "gi"), ""); //Remove punctuations, parentheses etc.
-            });
-
-            //Highlight found words
-            body.highlight(matches, {className: 'relaxtension-highlight'});
-            //TODO: jquery.highlight plugin has the same limitations with utf8 word boundary, 
-            //should it be dropped and use the same crude replacements?
-            //It would be better to highlight only complete words instead of strings in the middle of words and this is only possible in English with the plugin currently
-
-            //TODO: should this scroll to first found match
-            //or maybe scroll only if the first match is not in viewport currently
-          }else {
-            alert("No matches found");
-          }
-
-          console.log('matches after', matches);
-
-          //For debugging purposes
-          sendResponse('highlighted the words: ' + JSON.stringify(matches));
-          return true;
-      }
+  /**
+   * Creates the regex pattern for wanted word lengths
+   * Contains a crude replacement for ut8 words
+   * 
+   * @param {array<number>} wordLengths - Array of numbers
+   * 
+   * @return {string} pattern - Regex pattern
+   */
+  function createPattern(wordLengths) {
+    var patternWordPart     = "[a-zäöåéèáàëêâ\-]", //Crude replacement for utf8 \w
+        patternWordBoundary = "[\\s.:,!?()\\\"']", //Crude replacement for utf8 word boundary \b
+        pattern             = "";
+    
+    //Create regex pattern
+    for(var i = 0; i < wordLengths.length; i++) {
+      //First word begins with wordBoundary, 
+      //rest with whitespace since we might be looking for multiple words right after another
+      pattern += (i === 0 ? patternWordBoundary : "\\s") + patternWordPart + "{" + wordLengths[i] + "}";
     }
-  );
 
-})(jQuery);
+    //Append wordboundary to end of pattern
+    pattern += patternWordBoundary;
+
+    //console.log('pattern', pattern);
+
+    return pattern;
+  }
+
+  /**
+   * Checks for matches on page
+   * 
+   * @param {string} pattern      - Regex pattern
+   * @param {string} textToSearch - Page body text content
+   * 
+   * @return {boolean|array} - Array of matched words or false if none found
+   */
+  function checkMatches(pattern, textToSearch) {
+    var regex   = new RegExp(pattern,"gi"), 
+        matches = [], 
+        match;
+
+    //Check for matches
+    while(match = regex.exec(textToSearch)) {
+      var sanitizedMatch = match[0];
+
+      //Remove whitespace from beginning and end
+      sanitizedMatch = sanitizedMatch.trim();
+      //Remove punctuations, parentheses etc.
+      sanitizedMatch = sanitizedMatch.replace(new RegExp("[.:,!?()\\\"']", "gi"), "");
+      
+      //No duplicates or empty values
+      if(sanitizedMatch.length && matches.indexOf(sanitizedMatch) === -1) {
+        matches.push(sanitizedMatch);
+      }
+
+      //Also check overlapping matches
+      regex.lastIndex = match.index + 1;
+    }
+
+    //console.log('matches', matches);
+
+    if(matches && matches.length) {
+      return matches;
+    } else {
+      return false;
+    }
+
+  }
+
+  /**
+   * Chrome extension message listener
+   * 
+   * @param {*} request - Form submit values
+   * @param {*} sender
+   * @param {*} sendResponse
+   * 
+   * @return {boolean}
+   */
+  function listener(request, sender, sendResponse) {
+
+    if(typeof request.highlight !== undefined) {
+      
+      var body         = document.body,
+          markInstance = new Mark(body),
+          textToSearch = prepareText(body.innerText),
+          wordLengths  = checkInput(request.highlight),
+          pattern      = createPattern(wordLengths),
+          matches      = checkMatches(pattern, textToSearch);
+
+
+      //Clear previous highlights always
+      markInstance.unmark();
+
+      if(matches) {
+        
+        //Highlight found words
+        markInstance.mark(matches, {
+          className  : "relaxtension-highlight",
+          diacritics : false,
+          accuracy   : {
+            value    : "exactly",
+            limiters : [",", ".", ":", ";", "!", "?"]
+          }
+        });
+
+        //Scroll to first found match
+        var firstMatch = document.querySelector('.relaxtension-highlight');
+        window.scroll(0, firstMatch.offsetTop);
+
+      }else {
+        alert("No matches found");
+      }
+
+      //For debugging purposes
+      sendResponse('highlighted the words: ' + JSON.stringify(matches));
+      return true;
+    }
+  }
+  api.listener = listener;
+
+  return api;
+})();
+  
+chrome.runtime.onMessage.addListener(Relaxtension.listener);

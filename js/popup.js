@@ -7,14 +7,14 @@ function highlight(wordLengths) {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {highlight: wordLengths}, function(response) {
       //Callback
-      console.log(response);
+      console.log('popup response: ' + response);
     });
   });
 }
 
 //Form elements
-var form = document.getElementById("relaxtension-popup"),
-    input = document.getElementById("word-count");
+var form  = document.getElementById("relaxtension-popup"),
+    input = document.getElementById("relaxtension-word-count");
 
 //Set focus on input upon opening the popup
 input.focus();
