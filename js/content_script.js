@@ -126,11 +126,14 @@ var Relaxtension = (function() {
       markInstance.unmark();
 
       if(matches) {
+
+        console.log(matches);
         
         //Highlight found words
         markInstance.mark(matches, {
-          className  : "relaxtension-highlight",
-          diacritics : false,
+          className          : "relaxtension-highlight",
+          diacritics         : false,
+          separateWordSearch : false,
           accuracy   : {
             value    : "exactly",
             limiters : [",", ".", ":", ";", "!", "?"]
