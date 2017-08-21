@@ -134,6 +134,7 @@ var Relaxtension = (function() {
           className          : "relaxtension-highlight",
           diacritics         : false,
           separateWordSearch : false,
+          acrossElements     : true,
           accuracy   : {
             value    : "exactly",
             limiters : [",", ".", ":", ";", "!", "?"]
@@ -142,7 +143,10 @@ var Relaxtension = (function() {
 
         //Scroll to first found match
         var firstMatch = document.querySelector('.relaxtension-highlight');
-        window.scroll(0, firstMatch.offsetTop);
+
+        if(firstMatch) {
+          window.scroll(0, firstMatch.offsetTop);
+        }
 
       }else {
         alert("No matches found");

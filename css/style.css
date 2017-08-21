@@ -49,13 +49,47 @@
 
   #relaxtension-popup input {
     height: 25px;
+    outline: none;
     width: 100%;
   }
 
   #relaxtension-popup button {
+    background-image: url('../img/icon.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
     height: 25px;
+    outline: none;
+    padding: 2px 0;
+    width: 32px;
+  }
+
+  #relaxtension-popup.relaxtension-working button {
+    background-image: none;
+    position: relative;
+  }
+
+  #relaxtension-popup.relaxtension-working button:before {
+    animation: ld 1s linear infinite;
+    border: 1px solid #000;
+    border-bottom-color: transparent;
+    border-top-color: transparent;
+    border-radius: 50%;
+    content: '';
+    height: 14px;
+    left: 50%;
+    margin-top: -9px;
+    margin-left: -8px;
+    position: absolute;
+    top: 50%;
+    width: 14px;
   }
 
     #relaxtension-popup button img {
       max-height: 100%;
     }
+
+@keyframes ld {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
