@@ -20,4 +20,4 @@ Alternatively, you can drag and drop the directory where your extension files li
 
 ### Who do I talk to? ###
 
-* Repo owner: [miasa](https://bitbucket.org/miasa)
+* Repo owner: [miasa](https://github.com/miasa)
