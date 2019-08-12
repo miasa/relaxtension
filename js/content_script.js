@@ -128,7 +128,7 @@ var Relaxtension = (function() {
       if(matches) {
 
         console.log(matches);
-        
+
         //Highlight found words
         markInstance.mark(matches, {
           className          : "relaxtension-highlight",
@@ -148,7 +148,7 @@ var Relaxtension = (function() {
           window.scroll(0, firstMatch.offsetTop);
         }
 
-      }else {
+      } else {
         alert("No matches found");
       }
 
