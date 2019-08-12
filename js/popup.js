@@ -1,8 +1,7 @@
 //Form elements
-var form    = document.getElementById("relaxtension-popup"),
-  
-    input   = document.getElementById("relaxtension-word-count"),
-    workingClass = 'relaxtension-working';
+var form         = document.getElementById("relaxtension-popup"),
+    input        = document.getElementById("relaxtension-word-count"),
+    workingClass = 'relaxtension-working'; //css class for when highlight is running
 
 /**
  * Highlight function sends the input value of word character counts to content script
@@ -11,9 +10,8 @@ var form    = document.getElementById("relaxtension-popup"),
 function highlight(wordLengths) {
   //Send word character counts to content script
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {highlight: wordLengths}, function(response) {
-      //Callback
-      console.log('popup response: ' + response);
+    chrome.tabs.sendMessage(tabs[0].id, {highlight: wordLengths}, {}, function(response) {
+      //Callback after highlight is complete
       form.classList.remove(workingClass);
     });
   });
@@ -26,6 +24,7 @@ input.focus();
 form.addEventListener("submit", function(e) {
   e.preventDefault();
 
+  //Prevent duplicates
   if(!form.classList.contains(workingClass)) {
     form.classList.add(workingClass);
     highlight(input.value);

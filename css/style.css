@@ -69,24 +69,20 @@
     position: relative;
   }
 
-  #relaxtension-popup.relaxtension-working button:before {
-    animation: ld 1s linear infinite;
-    border: 1px solid #000;
-    border-bottom-color: transparent;
-    border-top-color: transparent;
-    border-radius: 50%;
-    content: '';
-    height: 14px;
-    left: 50%;
-    margin-top: -9px;
-    margin-left: -8px;
-    position: absolute;
-    top: 50%;
-    width: 14px;
-  }
-
-    #relaxtension-popup button img {
-      max-height: 100%;
+    #relaxtension-popup.relaxtension-working button:before {
+      animation: ld 1s linear infinite;
+      border: 1px solid #000;
+      border-bottom-color: transparent;
+      border-top-color: transparent;
+      border-radius: 50%;
+      content: '';
+      height: 14px;
+      left: 50%;
+      margin-top: -9px;
+      margin-left: -8px;
+      position: absolute;
+      top: 50%;
+      width: 14px;
     }
 
 @keyframes ld {
