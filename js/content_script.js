@@ -42,7 +42,7 @@ var Relaxtension = (function() {
    */
   function createPattern(wordLengths) {
     var patternWordPart     = "[a-zäöåéèáàëêâ\-]", //Crude replacement for utf8 \w
-        patternWordBoundary = "[\\s.:,!?()\\\"']", //Crude replacement for utf8 word boundary \b
+        patternWordBoundary = "[\\s.:,!?()\\\"'”]", //Crude replacement for utf8 word boundary \b
         pattern             = "";
     
     //Create regex pattern
