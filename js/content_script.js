@@ -80,7 +80,7 @@ var Relaxtension = (function() {
       //Remove whitespace from beginning and end
       sanitizedMatch = sanitizedMatch.trim();
       //Remove punctuations, parentheses etc.
-      sanitizedMatch = sanitizedMatch.replace(new RegExp("[.:,!?()\\\"']", "gi"), "");
+      sanitizedMatch = sanitizedMatch.replace(new RegExp("[.:,!?()\\\"'”]", "gi"), "");
       
       //No duplicates or empty values
       if(sanitizedMatch.length && matches.indexOf(sanitizedMatch) === -1) {
@@ -137,7 +137,7 @@ var Relaxtension = (function() {
           acrossElements     : true,
           accuracy   : {
             value    : "exactly",
-            limiters : [",", ".", ":", ";", "!", "?"]
+            limiters : [",", ".", ":", ";", "!", "?", "(", ")", "”"]
           }
         });
 
